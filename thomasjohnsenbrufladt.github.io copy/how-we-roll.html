@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>How we roll</title>
+</head>
+
+<body>
+<!-- Her skrives alt innhold, som man ønsker å "tegne" på skjermen. -->
+<!-- Issue se https://html.spec.whatwg.org/multipage/forms.html#introduction-4 -->
+<hr>
+<form>
+    <p><label for="data01">Navn</label>
+        <input type="text" name="Navn" id="data01" /></p>
+
+    <p><label for="data02">Alder</label>
+        <input type="text" name="Alder" id="data02" /></p>
+
+    <p>How do we roll? </p>
+
+    <p>
+        <!-- Work together - Work alone -->
+        <label for="dorn">Jobbe i team</label>
+        <input type="range" id="dorn" name="dorn" value="50">
+        <label for="dorn">Jobbe alene</label>
+    </p>
+
+    <p>
+        <!-- Whole story - Cut to the chase -->
+        <label for="cora">Fortell meg hele historien</label>
+        <input type="range" id="cora" name="cora" value="50">
+        <label for="cora">Kom til punktet</label>
+    </p>
+
+    <p>
+    <!-- Whole process - Task -->
+    <label for="alpha">Inkluder meg i hele prosessen</label>
+    <input type="range" id="alpha" name="alpha" value="50">
+    <label for="alpha">Gi meg en oppgave</label>
+    </p>
+
+    <p>
+    <!-- Only work at work - Working whenever I feel like it -->
+    <label for="beta">Jobbe til faste tider</label>
+    <input type="range" id="beta" name="beta" value="50">
+    <label for="beta">Når jeg føler for det</label>
+    </p>
+
+   <p>
+    <!-- Ongoing feedback - Feedback following tasks -->
+    <label for="charlie">Kontinuerlig tilbakemelding</label>
+    <input type="range" id="charlie" name="charlie" value="50">
+    <label for="charlie">Tilbakemelding etter lansering</label>
+    </p>
+
+    <p>
+        <!-- 9-5 - working when I want to -->
+        <label for="delta">Jeg foretrekker offentlig anerkjennelse</label>
+        <input type="range" id="delta" name="delta" value="50">
+        <label for="delta">Jeg foretrekker anerkjennelse på tomannshånd</label>
+    </p>
+
+    <button type="submit">Send inn svar</button>
+</form>
+
+<div class="results">
+    <h2>Resultater</h2>
+    <pre></pre>
+</div>
+
+<script>
+    // From https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch (seen 2021-09-27)
+    // Example POST method implementation using fetch:
+    async function postData(url = '', data = {}) {
+        // Default options are marked with *
+        const response = await fetch(url, {
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, *cors, same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache,only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+                'Content-Type': 'application/json',
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrerPolicy: 'no-referrer', // no-referrer,*no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+            body: JSON.stringify(data) // body data type must match"Content-Type"header
+        });
+        return response.json(); // parses JSON response into native JavaScriptobjects
+    }
+
+    function handleSubmit(event) {
+        event.preventDefault();
+        const data = new FormData(event.target);
+        const formJSON = Object.fromEntries(data.entries());
+        const results = document.querySelector('.results pre');
+        postData('https://bacit.info/', formJSON)
+            .then(data => {
+                results.innerText = JSON.stringify(data, null, 2);
+            });
+    }
+    const form = document.querySelector('form');
+    form.addEventListener('submit', handleSubmit);
+</script>
+</body>
+</html>
